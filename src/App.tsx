@@ -1,6 +1,7 @@
 import { AppBar, Container, CssBaseline, Toolbar, Typography } from '@mui/material'
 import './App.css'
 import TrainingList from './components/TrainingList'
+import CustomerList from './components/CustomerList'
 
 function App() {
 
@@ -13,6 +14,7 @@ function App() {
           </Toolbar>
         </AppBar>
         <TrainingList />
+        <CustomerList />
         <CssBaseline />
       </Container>
     </>
