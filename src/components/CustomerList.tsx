@@ -34,14 +34,19 @@ function CustomerList() {
 
     return (
         <>
-            <div style={{ width: "95%", height: 500, margin: "auto" }}>
-                <DataGrid
-                    columns={columns}
-                    rows={customers}
-                    getRowId={row => row._links.self.href}
-                    autoPageSize
-                    rowSelection={false}
-                />
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+            }}>
+                <div style={{ width: "95%", height: 500 }}>
+                    <DataGrid
+                        columns={columns}
+                        rows={customers}
+                        getRowId={row => row._links.self.href}
+                        autoPageSize
+                        rowSelection={false}
+                    />
+                </div>
             </div>
         </>
     );

@@ -44,14 +44,19 @@ function TrainingList() {
 
     return (
         <>
-            <div style={{ width: "70%", height: 500, margin: "auto" }}>
-                <DataGrid
-                    columns={columns}
-                    rows={trainings}
-                    getRowId={row => row.id}
-                    autoPageSize
-                    rowSelection={false}
-                />
+            <div style={{
+                display: "flex",
+                justifyContent: "center",
+            }}>
+                <div style={{ width: "70%", height: 500 }}>
+                    <DataGrid
+                        columns={columns}
+                        rows={trainings}
+                        getRowId={row => row.id}
+                        autoPageSize
+                        rowSelection={false}
+                    />
+                </div>
             </div>
         </>
     );

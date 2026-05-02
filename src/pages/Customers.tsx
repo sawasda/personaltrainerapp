@@ -1,5 +1,10 @@
 import CustomerList from "../components/CustomerList";
 
 export default function Customers() {
-    return(<CustomerList />)
+    return (
+        <>
+            <h3>Customers</h3>
+            <CustomerList />
+        </>
+    )
 }
