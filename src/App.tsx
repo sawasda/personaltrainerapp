@@ -1,24 +1,18 @@
-import { AppBar, Container, CssBaseline, Toolbar, Typography } from '@mui/material'
 import './App.css'
-import TrainingList from './components/TrainingList'
-import CustomerList from './components/CustomerList'
+import { Link, Outlet } from 'react-router';
 
 function App() {
 
   return (
     <>
-      <Container>
-        <AppBar position='static'>
-          <Toolbar>
-            <Typography variant='h6'>Personal trainer app</Typography>
-          </Toolbar>
-        </AppBar>
-        <TrainingList />
-        <CustomerList />
-        <CssBaseline />
-      </Container>
+      <nav>
+        <Link to={"/"}>Home</Link>
+        <Link to={"/customers"}>Customers</Link>
+        <Link to={"/trainings"}>Trainings</Link>
+      </nav>
+      <Outlet />
     </>
-  )
+  );
 }
 
-export default App
+export default App;
