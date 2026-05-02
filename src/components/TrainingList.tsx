@@ -18,16 +18,23 @@ function TrainingList() {
         },
         { field: "duration", width: 100, headerName: "Duration" },
         { field: "activity", width: 200, headerName: "Activity" },
+        {
+            field: "customer",
+            width: 200,
+            headerName: "Customer",
+            renderCell: (params) =>
+                `${params.row.customer.firstname} ${params.row.customer.lastname}`
+        }
     ]
 
     const getTrainings = () => {
-        fetch(import.meta.env.VITE_API_URL + "/trainings")
+        fetch(import.meta.env.VITE_API_URL + "/gettrainings")
             .then(response => {
                 if (!response.ok)
-                    throw new Error("Error when fetching data");
+                    throw new Error("Error when fetching training data");
                 return response.json();
             })
-            .then(data => setTrainings(data._embedded.trainings))
+            .then(data => setTrainings(data))
             .catch(error => console.error(error));
     }
 
@@ -41,7 +48,7 @@ function TrainingList() {
                 <DataGrid
                     columns={columns}
                     rows={trainings}
-                    getRowId={row => row._links.self.href}
+                    getRowId={row => row.id}
                     autoPageSize
                     rowSelection={false}
                 />
