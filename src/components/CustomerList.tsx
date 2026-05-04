@@ -1,7 +1,9 @@
 import { useEffect, useState } from "react";
-import type { CustomerData } from "../types";
+import type { CustomerData, Customer } from "../types";
 import type { GridColDef } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
+import AddCustomer from "./AddCustomer";
+import { saveCustomer } from "../customerapi";
 
 function CustomerList() {
 
@@ -28,6 +30,12 @@ function CustomerList() {
             .catch(error => console.error(error));
     }
 
+    const handleAdd = (customer: Customer) => {
+        saveCustomer(customer)
+            .then(() => getCustomers())
+            .catch(err => console.error(err))
+    }
+
     useEffect(() => {
         getCustomers();
     }, []);
@@ -38,14 +46,22 @@ function CustomerList() {
                 display: "flex",
                 justifyContent: "center",
             }}>
-                <div style={{ width: "95%", height: 500 }}>
-                    <DataGrid
-                        columns={columns}
-                        rows={customers}
-                        getRowId={row => row._links.self.href}
-                        autoPageSize
-                        rowSelection={false}
-                    />
+                <div style={{ width: "95%" }}>
+                    <div style={{ height: 500 }}>
+                        <DataGrid
+                            columns={columns}
+                            rows={customers}
+                            getRowId={row => row._links.self.href}
+                            autoPageSize
+                            rowSelection={false}
+                        />
+                    </div>
+                    <div style={{
+                        display: "flex",
+                        marginTop: 20,
+                    }}>
+                        <AddCustomer handleAdd={handleAdd} />
+                    </div>
                 </div>
             </div>
         </>
