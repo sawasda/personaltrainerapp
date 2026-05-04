@@ -1,8 +1,9 @@
 import { useEffect, useState } from "react";
 import type { CustomerData, Customer } from "../types";
-import type { GridColDef } from "@mui/x-data-grid";
+import type { GridColDef, GridRenderCellParams } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
 import AddCustomer from "./AddCustomer";
+import EditCustomer from "./EditCustomer";
 import { saveCustomer } from "../customerapi";
 
 function CustomerList() {
@@ -16,7 +17,15 @@ function CustomerList() {
         { field: "streetaddress", width: 180, headerName: "Street address" },
         { field: "postcode", width: 120, headerName: "Postal code" },
         { field: "city", width: 120, headerName: "City" },
-        { field: "phone", width: 150, headerName: "Phone number" }
+        { field: "phone", width: 150, headerName: "Phone number" },
+        {
+            field: "_links.car.href",
+            headerName: "",
+            sortable: false,
+            disableColumnMenu: false,
+            renderCell: (params: GridRenderCellParams) =>
+                <EditCustomer customer={params.row} handleUpdate={handleUpdate} />
+        }
     ]
 
     const getCustomers = () => {
@@ -36,6 +45,24 @@ function CustomerList() {
             .catch(err => console.error(err))
     }
 
+    const handleUpdate = (url: string, updatedCustomer: Customer) => {
+        fetch(url, {
+            method: "PUT",
+            headers: {
+                "Content-type": "application/json"
+            },
+            body: JSON.stringify(updatedCustomer)
+        })
+        .then(response => {
+            if (!response.ok)
+                throw new Error("Error when editing a customer");
+
+            return response.json();
+        })
+        .then(() => getCustomers())
+        .catch(err => console.error(err))
+    }
+
     useEffect(() => {
         getCustomers();
     }, []);
@@ -46,7 +73,7 @@ function CustomerList() {
                 display: "flex",
                 justifyContent: "center",
             }}>
-                <div style={{ width: "95%" }}>
+                <div style={{ width: "100%" }}>
                     <div style={{ height: 500 }}>
                         <DataGrid
                             columns={columns}
@@ -59,6 +86,7 @@ function CustomerList() {
                     <div style={{
                         display: "flex",
                         marginTop: 20,
+                        paddingLeft: 20
                     }}>
                         <AddCustomer handleAdd={handleAdd} />
                     </div>
