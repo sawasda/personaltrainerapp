@@ -5,27 +5,37 @@ import { DataGrid } from "@mui/x-data-grid";
 import AddCustomer from "./AddCustomer";
 import EditCustomer from "./EditCustomer";
 import { saveCustomer } from "../customerapi";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function CustomerList() {
 
     const [customers, setCustomers] = useState<CustomerData[]>([]);
 
     const columns: GridColDef[] = [
-        { field: "firstname", width: 120, headerName: "First name" },
-        { field: "lastname", width: 120, headerName: "Last name" },
-        { field: "email", width: 200, headerName: "Email" },
-        { field: "streetaddress", width: 180, headerName: "Street address" },
-        { field: "postcode", width: 120, headerName: "Postal code" },
-        { field: "city", width: 120, headerName: "City" },
-        { field: "phone", width: 150, headerName: "Phone number" },
+        { field: "firstname", flex: 1, headerName: "First name" },
+        { field: "lastname", flex: 1, headerName: "Last name" },
+        { field: "email", flex: 1.5, headerName: "Email" },
+        { field: "streetaddress", flex: 1.5, headerName: "Street address" },
+        { field: "postcode", flex: 1, headerName: "Postal code" },
+        { field: "city", flex: 1, headerName: "City" },
+        { field: "phone", flex: 1.5, headerName: "Phone number" },
         {
-            field: "_links.car.href",
-            headerName: "",
+            field: "actions",
+            headerName: "Actions",
             sortable: false,
-            disableColumnMenu: false,
-            renderCell: (params: GridRenderCellParams) =>
-                <EditCustomer customer={params.row} handleUpdate={handleUpdate} />
-        }
+            filterable: false,
+            disableColumnMenu: true,
+            flex: 1.5,
+            renderCell: (params: GridRenderCellParams) => (
+                <>
+                    <EditCustomer customer={params.row} handleUpdate={handleUpdate} />
+                    <IconButton onClick={() => handleDelete(params.id as string)}>
+                        <DeleteIcon />
+                    </IconButton>
+                </>
+            )
+        },
     ]
 
     const getCustomers = () => {
@@ -37,6 +47,24 @@ function CustomerList() {
             })
             .then(data => setCustomers(data._embedded.customers))
             .catch(error => console.error(error));
+    }
+
+    const handleDelete = (url: string) => {
+        if (window.confirm("Are you sure? This action cannot be undone.")) {
+            fetch(url, {
+                method: "DELETE"
+            })
+                .then(response => {
+                    if (!response.ok)
+                        throw new Error("Error when deleting a customer");
+
+                    return response.json();
+                })
+                .then(() => {
+                    getCustomers();
+                })
+                .catch(err => console.error(err))
+        }
     }
 
     const handleAdd = (customer: Customer) => {
@@ -53,14 +81,14 @@ function CustomerList() {
             },
             body: JSON.stringify(updatedCustomer)
         })
-        .then(response => {
-            if (!response.ok)
-                throw new Error("Error when editing a customer");
+            .then(response => {
+                if (!response.ok)
+                    throw new Error("Error when editing a customer");
 
-            return response.json();
-        })
-        .then(() => getCustomers())
-        .catch(err => console.error(err))
+                return response.json();
+            })
+            .then(() => getCustomers())
+            .catch(err => console.error(err))
     }
 
     useEffect(() => {
@@ -74,7 +102,7 @@ function CustomerList() {
                 justifyContent: "center",
             }}>
                 <div style={{ width: "100%" }}>
-                    <div style={{ height: 500 }}>
+                    <div style={{ height: 527 }}>
                         <DataGrid
                             columns={columns}
                             rows={customers}
