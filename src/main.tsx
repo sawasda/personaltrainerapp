@@ -7,6 +7,8 @@ import Customers from './pages/Customers.tsx';
 import Trainings from './pages/Trainings.tsx';
 import Home from './pages/Home.tsx';
 import Error from './pages/Error.tsx';
+import { LocalizationProvider } from "@mui/x-date-pickers";
+import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
 const router = createBrowserRouter([
   {
@@ -33,6 +35,8 @@ const router = createBrowserRouter([
 ReactDOM.createRoot(document.getElementById('root')!
 ).render(
   <React.StrictMode>
-    <RouterProvider router={router} />
+    <LocalizationProvider dateAdapter={AdapterDayjs}>
+      <RouterProvider router={router} />
+    </LocalizationProvider>
   </React.StrictMode>
 );

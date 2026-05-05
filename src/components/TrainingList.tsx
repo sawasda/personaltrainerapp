@@ -1,12 +1,15 @@
 import { useEffect, useState } from "react";
-import type { TrainingData } from "../types";
+import { type CustomerData, type Training, type TrainingData } from "../types";
 import type { GridColDef } from "@mui/x-data-grid";
 import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
+import AddTraining from "./AddTraining";
+import { saveTraining } from "../trainingapi";
 
 function TrainingList() {
 
     const [trainings, setTrainings] = useState<TrainingData[]>([]);
+    const [customers, setCustomers] = useState<CustomerData[]>([]);
 
     const columns: GridColDef[] = [
         {
@@ -23,9 +26,18 @@ function TrainingList() {
             width: 200,
             headerName: "Customer",
             renderCell: (params) =>
-                `${params.row.customer.firstname} ${params.row.customer.lastname}`
+                params.row.customer
+                    ? `${params.row.customer.firstname} ${params.row.customer.lastname}`
+                    : "No customer"
         }
     ]
+
+    const getCustomers = () => {
+        fetch(import.meta.env.VITE_API_URL + "/customers")
+            .then(res => res.json())
+            .then(data => setCustomers(data._embedded.customers))
+            .catch(err => console.error(err));
+    }
 
     const getTrainings = () => {
         fetch(import.meta.env.VITE_API_URL + "/gettrainings")
@@ -38,15 +50,23 @@ function TrainingList() {
             .catch(error => console.error(error));
     }
 
+    const handleAdd = (training: Training) => {
+        saveTraining(training)
+            .then(() => getTrainings())
+            .catch((err: unknown) => console.error(err))
+    }
+
     useEffect(() => {
         getTrainings();
+        getCustomers();
     }, []);
 
     return (
         <>
             <div style={{
                 display: "flex",
-                justifyContent: "center",
+                flexDirection: "column",
+                alignItems: "center"
             }}>
                 <div style={{ width: "70%", height: 500 }}>
                     <DataGrid
@@ -56,6 +76,15 @@ function TrainingList() {
                         autoPageSize
                         rowSelection={false}
                     />
+                </div>
+                <div style={{
+                    width: "70%",
+                    display: "flex",
+                    justifyContent: "flex-start",
+                    marginTop: 20,
+                    paddingLeft: 20
+                }}>
+                    <AddTraining handleAdd={handleAdd} customers={customers} />
                 </div>
             </div>
         </>

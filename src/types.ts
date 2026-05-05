@@ -30,5 +30,11 @@ export type CustomerData = {
     }
 }
 
-export type Training = Omit<TrainingData, "_links">;
+export type Training = {
+    date: string;
+    duration: number;
+    activity: string;
+    customer: string;
+}
+
 export type Customer = Omit<CustomerData, "_links">;
