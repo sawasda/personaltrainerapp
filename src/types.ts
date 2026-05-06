@@ -32,7 +32,7 @@ export type CustomerData = {
 
 export type Training = {
     date: string;
-    duration: number;
+    duration: string;
     activity: string;
     customer: string;
 }

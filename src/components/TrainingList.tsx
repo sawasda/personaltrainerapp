@@ -5,6 +5,8 @@ import { DataGrid } from "@mui/x-data-grid";
 import dayjs from "dayjs";
 import AddTraining from "./AddTraining";
 import { saveTraining } from "../trainingapi";
+import { IconButton } from "@mui/material";
+import DeleteIcon from "@mui/icons-material/Delete";
 
 function TrainingList() {
 
@@ -14,21 +16,36 @@ function TrainingList() {
     const columns: GridColDef[] = [
         {
             field: "date",
-            width: 200,
+            flex: 2,
             headerName: "Date",
             renderCell: (params) =>
                 dayjs(params.value).format("DD.MM.YYYY HH:mm")
         },
-        { field: "duration", width: 100, headerName: "Duration" },
-        { field: "activity", width: 200, headerName: "Activity" },
+        { field: "duration", flex: 1, headerName: "Duration" },
+        { field: "activity", flex: 1.5, headerName: "Activity" },
         {
             field: "customer",
-            width: 200,
+            flex: 2,
             headerName: "Customer",
             renderCell: (params) =>
                 params.row.customer
                     ? `${params.row.customer.firstname} ${params.row.customer.lastname}`
                     : "No customer"
+        },
+        {
+            field: "actions",
+            headerName: "Actions",
+            sortable: false,
+            filterable: false,
+            disableColumnMenu: true,
+            flex: 1.5,
+            renderCell: (params) => (
+                <>
+                    <IconButton onClick={() => handleDelete(params.row.id)}>
+                        <DeleteIcon />
+                    </IconButton>
+                </>
+            )
         }
     ]
 
@@ -50,6 +67,22 @@ function TrainingList() {
             .catch(error => console.error(error));
     }
 
+    const handleDelete = (id: string) => {
+        if (window.confirm("Are you sure? This action cannot be undone.")) {
+            fetch(`${import.meta.env.VITE_API_URL}/trainings/${id}`, {
+                method: "DELETE"
+            })
+                .then(response => {
+                    if (!response.ok)
+                        throw new Error("Error when deleting training");
+                })
+                .then(() => {
+                    getTrainings();
+                })
+                .catch(err => console.error(err))
+        }
+    }
+
     const handleAdd = (training: Training) => {
         saveTraining(training)
             .then(() => getTrainings())
@@ -68,7 +101,7 @@ function TrainingList() {
                 flexDirection: "column",
                 alignItems: "center"
             }}>
-                <div style={{ width: "70%", height: 500 }}>
+                <div style={{ width: "70%", height: 527 }}>
                     <DataGrid
                         columns={columns}
                         rows={trainings}

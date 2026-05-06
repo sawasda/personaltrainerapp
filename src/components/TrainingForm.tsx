@@ -11,7 +11,13 @@ type TrainingFormType = {
 
 export default function TrainingForm({ training, setTraining, customers }: TrainingFormType) {
     return (
-        <DialogContent>
+        <DialogContent
+        sx={{
+            display: "flex",
+            flexDirection: "column",
+            gap: 2,
+            minWidth: 400
+        }}>
             <DateTimePicker
                 label="Date"
                 value={training.date ? dayjs(training.date) : null}
@@ -25,7 +31,7 @@ export default function TrainingForm({ training, setTraining, customers }: Train
                 margin="dense"
                 label="Duration"
                 value={training.duration}
-                onChange={e => setTraining({ ...training, duration: Number(e.target.value) })}
+                onChange={e => setTraining({ ...training, duration: e.target.value})}
                 fullWidth
                 variant="standard"
             />

@@ -12,7 +12,7 @@ export default function AddTraining(props: AddTrainingProps) {
     const [open, setOpen] = useState(false);
     const [training, setTraining] = useState<Training>({
         date: "",
-        duration: 0,
+        duration: "",
         activity: "",
         customer: ""
     })
