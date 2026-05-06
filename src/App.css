@@ -182,3 +182,8 @@
     border-right-color: var(--border);
   }
 }
+
+.rbc-event {
+    font-size: 12px;
+    padding: 2px 4px;
+}

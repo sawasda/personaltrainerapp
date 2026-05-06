@@ -7,6 +7,7 @@ import Customers from './pages/Customers.tsx';
 import Trainings from './pages/Trainings.tsx';
 import Home from './pages/Home.tsx';
 import Error from './pages/Error.tsx';
+import Calendar from './pages/Calendar.tsx';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
@@ -27,6 +28,10 @@ const router = createBrowserRouter([
       {
         path: "trainings",
         element: <Trainings />,
+      },
+      {
+        path: "calendar",
+        element: <Calendar />
       }
     ]
   }
