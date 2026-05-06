@@ -49,7 +49,7 @@ export default function TrainingForm({ training, setTraining, customers }: Train
                 getOptionLabel={(option) =>
                     `${option.firstname} ${option.lastname}`
                 }
-                onChange={(e, value) =>
+                onChange={(_, value) =>
                     setTraining({
                         ...training, customer: value ?
                             value._links.customer.href : ""

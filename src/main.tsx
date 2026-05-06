@@ -2,7 +2,7 @@ import React from 'react'
 import ReactDOM from 'react-dom/client'
 import './index.css'
 import App from './App.tsx'
-import { createBrowserRouter, RouterProvider } from 'react-router';
+import { createHashRouter, RouterProvider } from 'react-router';
 import Customers from './pages/Customers.tsx';
 import Trainings from './pages/Trainings.tsx';
 import Home from './pages/Home.tsx';
@@ -11,7 +11,7 @@ import Calendar from './pages/Calendar.tsx';
 import { LocalizationProvider } from "@mui/x-date-pickers";
 import { AdapterDayjs } from "@mui/x-date-pickers/AdapterDayjs";
 
-const router = createBrowserRouter([
+const router = createHashRouter([
   {
     path: "/",
     element: <App />,
@@ -35,7 +35,8 @@ const router = createBrowserRouter([
       }
     ]
   }
-]);
+], {
+});
 
 ReactDOM.createRoot(document.getElementById('root')!
 ).render(
