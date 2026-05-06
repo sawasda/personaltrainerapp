@@ -5,7 +5,7 @@ import { DataGrid } from "@mui/x-data-grid";
 import AddCustomer from "./AddCustomer";
 import EditCustomer from "./EditCustomer";
 import { saveCustomer } from "../customerapi";
-import { IconButton } from "@mui/material";
+import { Button, IconButton } from "@mui/material";
 import DeleteIcon from "@mui/icons-material/Delete";
 
 function CustomerList() {
@@ -37,6 +37,47 @@ function CustomerList() {
             )
         },
     ]
+
+    const exportCSV = () => {
+        const headers = [
+            "First name",
+            "Last name",
+            "Email",
+            "Street address",
+            "Postal code",
+            "City",
+            "Email",
+            "Phone"
+        ];
+
+        const rows = customers.map(c => [
+            c.firstname,
+            c.lastname,
+            c.email,
+            c.streetaddress,
+            c.postcode,
+            c.city,
+            c.email,
+            c.phone
+        ]);
+
+        const csvContent =
+            [headers, ...rows]
+                .map(row => row.join(","))
+                .join("\n");
+
+        const blob = new Blob([csvContent], { type: "text/csv;charset=uft-8;" });
+
+        const url = window.URL.createObjectURL(blob);
+        const link = document.createElement("a");
+
+        link.href = url;
+        link.setAttribute("download", "customers.csv");
+        document.body.appendChild(link);
+
+        link.click();
+        document.body.removeChild(link);
+    }
 
     const getCustomers = () => {
         fetch(import.meta.env.VITE_API_URL + "/customers")
@@ -114,9 +155,19 @@ function CustomerList() {
                     <div style={{
                         display: "flex",
                         marginTop: 20,
-                        paddingLeft: 20
+                        paddingLeft: 20,
+                        gap: 10
                     }}>
                         <AddCustomer handleAdd={handleAdd} />
+                        <Button sx={{
+                            backgroundColor: "#86a9cc",
+                            color: "white",
+                            "&:hover": {
+                                backgroundColor: "#244864"
+                            }
+                        }} onClick={exportCSV}>
+                            Export CSV
+                        </Button>
                     </div>
                 </div>
             </div>
